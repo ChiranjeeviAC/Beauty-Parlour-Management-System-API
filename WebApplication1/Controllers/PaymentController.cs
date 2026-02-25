@@ -123,5 +123,24 @@ namespace WebApplication1.Controllers
                 totalRevenue = totalRevenue
             });
         }
+
+        // 🔹 GET: api/payment/staff-earnings
+        [HttpGet("staff-earnings")]
+        public IActionResult GetStaffWiseEarnings()
+        {
+            var earnings = _context.Payments
+                .Include(p => p.Appointment)
+                .ThenInclude(a => a.Staff)
+                .AsEnumerable()
+                .GroupBy(p => p.Appointment.Staff.StaffName)
+                .Select(g => new
+                {
+                    StaffName = g.Key,
+                    TotalEarnings = g.Sum(x => x.Amount)
+                })
+                .ToList();
+
+            return Ok(earnings);
+        }
     }
 }
