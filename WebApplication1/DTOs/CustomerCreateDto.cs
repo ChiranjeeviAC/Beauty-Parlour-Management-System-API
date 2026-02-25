@@ -1,13 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
-namespace WebApplication1.Model
+namespace WebApplication1.DTOs
 {
-    public class Customer
+    public class CustomerCreateDto
     {
-        [Key]
-        public int CustomerId { get; set; }
-
         [Required]
         [MaxLength(100)]
         public string Name { get; set; }
@@ -23,9 +19,5 @@ namespace WebApplication1.Model
 
         [Required]
         public string Gender { get; set; }
-
-        // Navigation Property (1 Customer → Many Appointments)
-        
-        public ICollection<Appointment> Appointments { get; set; }
     }
 }

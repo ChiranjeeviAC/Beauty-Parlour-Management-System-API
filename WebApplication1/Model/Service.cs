@@ -22,6 +22,7 @@ namespace WebApplication1.Model
         public int Duration { get; set; }   // Minutes
 
         // Navigation Property (1 Service → Many Appointments)
+
         public ICollection<Appointment> Appointments { get; set; }
     }
 }
