@@ -111,5 +111,17 @@ namespace WebApplication1.Controllers
                 data = payment.PaymentId
             });
         }
+
+        //  GET: api/payment/total-revenue
+        [HttpGet("total-revenue")]
+        public IActionResult GetTotalRevenue()
+        {
+            var totalRevenue = _context.Payments.Sum(p => p.Amount);
+
+            return Ok(new
+            {
+                totalRevenue = totalRevenue
+            });
+        }
     }
 }
