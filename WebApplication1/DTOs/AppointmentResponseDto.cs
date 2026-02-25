@@ -20,5 +20,7 @@ namespace WebApplication1.DTOs
         public string TimeSlot { get; set; }
 
         public AppointmentStatus Status { get; set; }
+
+        public bool IsPaymentDone { get; set; }
     }
 }

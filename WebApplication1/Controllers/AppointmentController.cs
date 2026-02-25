@@ -26,6 +26,7 @@ namespace WebApplication1.Controllers
                 .Include(a => a.Customer)
                 .Include(a => a.Staff)
                 .Include(a => a.Service)
+                .Include(a => a.Payment)
                 .ToList();
 
             var result = appointments.Select(a => new AppointmentResponseDto
@@ -43,7 +44,8 @@ namespace WebApplication1.Controllers
 
                 AppointmentDate = a.AppointmentDate,
                 TimeSlot = a.TimeSlot,
-                Status = a.Status
+                Status = a.Status,
+                IsPaymentDone = a.Payment != null
             }).ToList();
 
             return Ok(result);
@@ -57,6 +59,7 @@ namespace WebApplication1.Controllers
                 .Include(a => a.Customer)
                 .Include(a => a.Staff)
                 .Include(a => a.Service)
+                .Include(a => a.Payment)
                 .FirstOrDefault(a => a.AppointmentId == id);
 
             if (appointment == null)
@@ -77,7 +80,8 @@ namespace WebApplication1.Controllers
 
                 AppointmentDate = appointment.AppointmentDate,
                 TimeSlot = appointment.TimeSlot,
-                Status = appointment.Status
+                Status = appointment.Status,
+                IsPaymentDone = appointment.Payment != null
             };
 
             return Ok(result);
