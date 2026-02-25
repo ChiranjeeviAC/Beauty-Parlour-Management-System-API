@@ -87,6 +87,19 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult BookAppointment(AppointmentCreateDto dto)
         {
+            var isAlreadyBooked = _context.Appointments.Any(a =>
+            a.StaffId == dto.StaffId &&
+            a.AppointmentDate.Date == dto.AppointmentDate.Date &&
+            a.TimeSlot == dto.TimeSlot &&
+            a.Status != AppointmentStatus.Cancelled);
+
+            if (isAlreadyBooked)
+            {
+                return BadRequest(new
+                {
+                    message = "Staff is already booked for this time slot"
+                });
+            }
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
