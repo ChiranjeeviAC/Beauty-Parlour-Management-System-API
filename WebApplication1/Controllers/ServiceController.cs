@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Model;
@@ -145,6 +146,29 @@ namespace WebApplication1.Controllers
                     Duration = service.Duration
                 }
             });
+        }
+
+        [HttpGet("{id}/appointments")]
+        public IActionResult GetServiceAppointments(int id)
+        {
+            var service = _context.Services
+                .Include(s => s.Appointments)
+                .ThenInclude(a => a.Customer)
+                .FirstOrDefault(s => s.ServiceId == id);
+
+            if (service == null)
+                return NotFound(new { message = "Service not found" });
+
+            var result = service.Appointments.Select(a => new
+            {
+                a.AppointmentId,
+                a.AppointmentDate,
+                a.TimeSlot,
+                CustomerName = a.Customer.Name,
+                a.Status
+            }).ToList();
+
+            return Ok(result);
         }
     }
 }
