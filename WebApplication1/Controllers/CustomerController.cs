@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Model;
@@ -151,7 +152,33 @@ namespace WebApplication1.Controllers
                     Address = customer.Address,
                     Gender = customer.Gender
                 }
+
+
             });
+        }
+
+
+        [HttpGet("{id}/appointments")]
+        public IActionResult GetCustomerAppointments(int id)
+        {
+            var customer = _context.Customers
+                .Include(c => c.Appointments)
+                .ThenInclude(a => a.Service)
+                .FirstOrDefault(c => c.CustomerId == id);
+
+            if (customer == null)
+                return NotFound(new { message = "Customer not found" });
+
+            var result = customer.Appointments.Select(a => new
+            {
+                a.AppointmentId,
+                a.AppointmentDate,
+                a.TimeSlot,
+                ServiceName = a.Service.ServiceName,
+                a.Status
+            }).ToList();
+
+            return Ok(result);
         }
     }
 }
