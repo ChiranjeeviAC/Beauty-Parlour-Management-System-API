@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Model;
@@ -152,6 +153,29 @@ namespace WebApplication1.Controllers
                     Salary = staff.Salary
                 }
             });
+        }
+
+        [HttpGet("{id}/appointments")]
+        public IActionResult GetStaffAppointments(int id)
+        {
+            var staff = _context.Staffs
+                .Include(s => s.Appointments)
+                .ThenInclude(a => a.Service)
+                .FirstOrDefault(s => s.StaffId == id);
+
+            if (staff == null)
+                return NotFound(new { message = "Staff not found" });
+
+            var result = staff.Appointments.Select(a => new
+            {
+                a.AppointmentId,
+                a.AppointmentDate,
+                a.TimeSlot,
+                ServiceName = a.Service.ServiceName,
+                a.Status
+            }).ToList();
+
+            return Ok(result);
         }
     }
 }
