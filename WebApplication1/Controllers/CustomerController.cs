@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // 🔹 GET: api/customer
+        // GET: api/customer
         [HttpGet]
         public IActionResult GetAllCustomers()
         {
@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        // 🔹 GET: api/customer/5
+        // GET: api/customer/5
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
@@ -57,7 +57,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        // 🔹 POST: api/customer
+        //  POST: api/customer
         [HttpPost]
         public IActionResult AddCustomer(CustomerCreateDto dto)
         {
@@ -90,7 +90,7 @@ namespace WebApplication1.Controllers
                 new { id = customer.CustomerId }, result);
         }
 
-        // 🔹 PUT: api/customer/5
+        //  PUT: api/customer/5
         [HttpPut("{id}")]
         public IActionResult UpdateCustomer(int id, CustomerUpdateDto dto)
         {
@@ -127,7 +127,7 @@ namespace WebApplication1.Controllers
             });
         }
 
-        // 🔹 DELETE: api/customer/5
+        //  DELETE: api/customer/5
         [HttpDelete("{id}")]
         public IActionResult DeleteCustomer(int id)
         {

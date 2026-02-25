@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
-        // 🔹 GET: api/staff
+        //  GET: api/staff
         [HttpGet]
         public IActionResult GetAllStaff()
         {
@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        // 🔹 GET: api/staff/5
+        // GET: api/staff/5
         [HttpGet("{id}")]
         public IActionResult GetStaffById(int id)
         {
@@ -57,7 +57,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        // 🔹 POST: api/staff
+        // POST: api/staff
         [HttpPost]
         public IActionResult AddStaff(StaffCreateDto dto)
         {
@@ -90,7 +90,7 @@ namespace WebApplication1.Controllers
                 new { id = staff.StaffId }, result);
         }
 
-        // 🔹 PUT: api/staff/5
+        // PUT: api/staff/5
         [HttpPut("{id}")]
         public IActionResult UpdateStaff(int id, StaffUpdateDto dto)
         {
@@ -127,7 +127,7 @@ namespace WebApplication1.Controllers
             });
         }
 
-        // 🔹 DELETE: api/staff/5
+        // DELETE: api/staff/5
         [HttpDelete("{id}")]
         public IActionResult DeleteStaff(int id)
         {
