@@ -155,5 +155,23 @@ namespace WebApplication1.Controllers
 
             return Ok(new { message = "Appointment cancelled successfully" });
         }
+
+        // 🔹 GET: api/appointment/daily-count
+        [HttpGet("daily-count")]
+        public IActionResult GetDailyAppointmentCount()
+        {
+            var dailyCount = _context.Appointments
+                .AsEnumerable()
+                .GroupBy(a => a.AppointmentDate.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    TotalAppointments = g.Count()
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            return Ok(dailyCount);
+        }
     }
 }
