@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
+using WebApplication1.DTOs;
 using WebApplication1.DTOs.Staff;
 using WebApplication1.Model;
 
@@ -98,21 +99,31 @@ namespace WebApplication1.Controllers
         }
 
 
-        [HttpPut("{id}/ChangePassword")]
-        public IActionResult ChangePassword(int id, string Password)
+        [HttpPut("{id}/change-password")]
+        public IActionResult ChangePassword(int id, ChangePasswordDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-
-            var user = _context.UserSs.FirstOrDefault(i => i.StaffId == id);
+            // Find login record using StaffId
+            var user = _context.UserSs
+                .FirstOrDefault(u => u.StaffId == id);
 
             if (user == null)
                 return NotFound(new { message = "Staff not found" });
-            user.Password = Password;
+
+            // Check old password
+            if (user.Password != dto.OldPassword)
+                return BadRequest(new { message = "Old password is incorrect" });
+
+            // Update password
+            user.Password = dto.NewPassword;
+
             _context.SaveChanges();
+
             return Ok(new
             {
-                message = "Staff Password updated successfully",
-
+                message = "Staff password updated successfully"
             });
         }
 
