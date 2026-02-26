@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using WebApplication1.Model.Enums;
 
-namespace WebApplication1.DTOs
+namespace WebApplication1.DTOs.Service
 {
-    public class ServiceUpdateDto
+    public class ServiceCreateDto
     {
         [Required]
         [MaxLength(100)]
@@ -16,6 +16,6 @@ namespace WebApplication1.DTOs
         public double Price { get; set; }
 
         [Range(1, 600)]
-        public int Duration { get; set; }
+        public int Duration { get; set; } // in minutes
     }
 }

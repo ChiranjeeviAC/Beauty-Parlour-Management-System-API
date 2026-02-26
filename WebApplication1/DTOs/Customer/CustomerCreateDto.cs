@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.DTOs
+namespace WebApplication1.DTOs.Customer
 {
-    public class CustomerUpdateDto
+    public class CustomerCreateDto
     {
         [Required]
         [MaxLength(100)]

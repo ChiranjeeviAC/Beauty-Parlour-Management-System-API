@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.DTOs
+namespace WebApplication1.DTOs.Appointment
 {
     public class AppointmentCreateDto
     {

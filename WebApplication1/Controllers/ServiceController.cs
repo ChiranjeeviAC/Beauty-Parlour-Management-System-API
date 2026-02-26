@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
-using WebApplication1.DTOs;
+using WebApplication1.DTOs.Service;
 using WebApplication1.Model;
 
 namespace WebApplication1.Controllers

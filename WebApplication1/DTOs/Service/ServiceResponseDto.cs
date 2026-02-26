@@ -1,6 +1,6 @@
 ﻿using WebApplication1.Model.Enums;
 
-namespace WebApplication1.DTOs
+namespace WebApplication1.DTOs.Service
 {
     public class ServiceResponseDto
     {

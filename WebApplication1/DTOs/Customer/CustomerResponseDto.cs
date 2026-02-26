@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.DTOs
+﻿namespace WebApplication1.DTOs.Customer
 {
     public class CustomerResponseDto
     {
