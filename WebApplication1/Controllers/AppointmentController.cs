@@ -158,6 +158,74 @@ namespace WebApplication1.Controllers
             return Ok(new { message = "Appointment updated successfully" });
         }
 
+        // To change appointment Time Slot
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateAppointmentTimeslot(int id, string TimeSlot)
+        {
+            var appointment = _context.Appointments.Find(id);
+
+            if (appointment == null)
+                return NotFound(new { message = "Appointment not found" });
+
+            var isAlreadyBooked = _context.Appointments.Any(a =>
+            a.StaffId == appointment.StaffId &&
+            a.AppointmentDate.Date == appointment.AppointmentDate.Date &&
+            a.TimeSlot == appointment.TimeSlot &&
+            a.Status != AppointmentStatus.Cancelled);
+
+            if (isAlreadyBooked)
+            {
+                return BadRequest(new
+                {
+                    message = "Staff is already booked for this time slot you cannot update"
+                });
+            }
+
+
+            appointment.TimeSlot = TimeSlot;
+           
+
+            _context.SaveChanges();
+
+            return Ok(new { message = $"Appointment time updated to {TimeSlot} successfully" });
+        }
+
+
+        // To change appointment Date
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateAppointmentDate(int id, DateTime AppointmentDate)
+        {
+            var appointment = _context.Appointments.Find(id);
+
+            if (appointment == null)
+                return NotFound(new { message = "Appointment not found" });
+
+            var isAlreadyBooked = _context.Appointments.Any(a =>
+            a.StaffId == appointment.StaffId &&
+            a.AppointmentDate.Date == appointment.AppointmentDate.Date &&
+            a.TimeSlot == appointment.TimeSlot &&
+            a.Status != AppointmentStatus.Cancelled);
+
+            if (isAlreadyBooked)
+            {
+                return BadRequest(new
+                {
+                    message = "Staff is already booked for this time slot you cannot update"
+                });
+            }
+
+
+            appointment.AppointmentDate = AppointmentDate;
+
+
+            _context.SaveChanges();
+
+            return Ok(new { message = $"Appointment time updated to {AppointmentDate} successfully" });
+        }
+
+
         // 🔹 CANCEL
         [HttpDelete("{id}")]
         public IActionResult CancelAppointment(int id)

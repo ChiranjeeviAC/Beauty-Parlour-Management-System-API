@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.DTOs.Customer;
@@ -94,6 +95,25 @@ namespace WebApplication1.Controllers
             {
                 message = "Customer updated successfully",
                 data = result
+            });
+        }
+
+
+        [HttpPut("{id}/ChangePassword")]
+        public IActionResult ChangePassword(int id, string Password)
+        {
+            
+
+            var user = _context.UserCs.FirstOrDefault(i => i.CustomerId == id);
+
+            if (user == null)
+                return NotFound(new { message = "Customer not found" });
+            user.Password = Password;
+            _context.SaveChanges();
+            return Ok(new
+            {
+                message = "Customer Password updated successfully",
+
             });
         }
 

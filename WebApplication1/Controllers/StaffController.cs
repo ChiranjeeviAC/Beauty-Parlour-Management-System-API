@@ -97,6 +97,25 @@ namespace WebApplication1.Controllers
             });
         }
 
+
+        [HttpPut("{id}/ChangePassword")]
+        public IActionResult ChangePassword(int id, string Password)
+        {
+
+
+            var user = _context.UserSs.FirstOrDefault(i => i.StaffId == id);
+
+            if (user == null)
+                return NotFound(new { message = "Staff not found" });
+            user.Password = Password;
+            _context.SaveChanges();
+            return Ok(new
+            {
+                message = "Staff Password updated successfully",
+
+            });
+        }
+
         // DELETE: api/staff/5
         [HttpDelete("{id}")]
         public IActionResult DeleteStaff(int id)
