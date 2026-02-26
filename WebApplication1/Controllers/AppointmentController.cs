@@ -149,9 +149,26 @@ namespace WebApplication1.Controllers
             if (appointment == null)
                 return NotFound(new { message = "Appointment not found" });
 
+
+            var isAlreadyBooked = _context.Appointments.Any(a =>
+            a.StaffId == appointment.StaffId &&
+            a.AppointmentDate.Date == appointment.AppointmentDate.Date &&
+            a.TimeSlot == appointment.TimeSlot &&
+            a.Status != AppointmentStatus.Cancelled);
+
+            if (isAlreadyBooked)
+            {
+                return BadRequest(new
+                {
+                    message = "Staff is already booked for this time slot you cannot update"
+                });
+            }
+
+
+
             appointment.AppointmentDate = dto.AppointmentDate;
             appointment.TimeSlot = dto.TimeSlot;
-            appointment.Status = dto.Status;
+            
 
             _context.SaveChanges();
 
