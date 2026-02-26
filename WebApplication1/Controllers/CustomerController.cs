@@ -58,38 +58,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        //  POST: api/customer
-        [HttpPost]
-        public IActionResult AddCustomer(CustomerCreateDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var customer = new Customer
-            {
-                Name = dto.Name,
-                Phone = dto.Phone,
-                Email = dto.Email,
-                Address = dto.Address,
-                Gender = dto.Gender
-            };
-
-            _context.Customers.Add(customer);
-            _context.SaveChanges();
-
-            var result = new CustomerResponseDto
-            {
-                CustomerId = customer.CustomerId,
-                Name = customer.Name,
-                Phone = customer.Phone,
-                Email = customer.Email,
-                Address = customer.Address,
-                Gender = customer.Gender
-            };
-
-            return CreatedAtAction(nameof(GetCustomerById),
-                new { id = customer.CustomerId }, result);
-        }
+        
 
         //  PUT: api/customer/5
         [HttpPut("{id}")]

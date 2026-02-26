@@ -58,38 +58,7 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
-        // POST: api/staff
-        [HttpPost]
-        public IActionResult AddStaff(StaffCreateDto dto)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var staff = new Staff
-            {
-                StaffName = dto.StaffName,
-                Role = dto.Role,
-                Phone = dto.Phone,
-                Experience = dto.Experience,
-                Salary = dto.Salary
-            };
-
-            _context.Staffs.Add(staff);
-            _context.SaveChanges();
-
-            var result = new StaffResponseDto
-            {
-                StaffId = staff.StaffId,
-                StaffName = staff.StaffName,
-                Role = staff.Role,
-                Phone = staff.Phone,
-                Experience = staff.Experience,
-                Salary = staff.Salary
-            };
-
-            return CreatedAtAction(nameof(GetStaffById),
-                new { id = staff.StaffId }, result);
-        }
+        
 
         // PUT: api/staff/5
         [HttpPut("{id}")]

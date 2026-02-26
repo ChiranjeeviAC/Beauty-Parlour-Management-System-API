@@ -22,6 +22,9 @@ namespace WebApplication1.Model
 
         public int Experience { get; set; }
 
+        [EmailAddress]
+        public string Email { get; set; }
+
         public double Salary { get; set; }
 
         // Navigation Property (1 Staff → Many Appointments)
