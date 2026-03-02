@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
 using WebApplication1.Model;
@@ -44,13 +45,18 @@ namespace WebApplication1.Controllers
             _context.Staffs.Add(staff);
             _context.SaveChanges();
 
+
+            var hasher = new PasswordHasher<UserS>();
+
             // Store login details separately
             var user = new UserS
             {
                 Email = dto.Email,
-                Password = dto.Password,
+                
                 StaffId = staff.StaffId
             };
+
+            user.Password = hasher.HashPassword(user, user.Password);
 
             _context.UserSs.Add(user);
             _context.SaveChanges();
@@ -69,12 +75,30 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _context.UserSs
-                .FirstOrDefault(u =>
-                    u.Email == dto.Email &&
-                    u.Password == dto.Password);
+
+
+            var user = _context.Staffs
+               .FirstOrDefault(x => x.Email == dto.Email);
 
             if (user == null)
+            {
+                return Unauthorized("Invalid Employee ID or Password");
+            }
+
+            var userS = _context.UserSs
+                .FirstOrDefault(u =>
+                    u.Email == dto.Email);
+
+
+            var hasher = new PasswordHasher<UserS>();
+
+            var result = hasher.VerifyHashedPassword(
+                userS,
+                userS.Password,
+                dto.Password
+            );
+
+            if (result == PasswordVerificationResult.Failed)
                 return Unauthorized(new { message = "Invalid email or password" });
 
             return Ok(new

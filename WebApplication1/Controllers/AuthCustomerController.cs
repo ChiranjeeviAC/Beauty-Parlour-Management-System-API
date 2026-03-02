@@ -72,6 +72,8 @@ namespace WebApplication1.Controllers
         [HttpPost("login")]
         public IActionResult Login(LoginDto dto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
 
             var user = _context.Customers
@@ -84,8 +86,7 @@ namespace WebApplication1.Controllers
 
 
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            
 
             var userC = _context.UserCs
                 .FirstOrDefault(u =>
@@ -100,9 +101,8 @@ namespace WebApplication1.Controllers
             );
 
             if (result == PasswordVerificationResult.Failed)
-            {
-                return Unauthorized("Invalid Employee ID or Password");
-            }
+                return Unauthorized(new { message = "Invalid email or password" });
+
 
             return Ok(new
             {
