@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data;
 using WebApplication1.DTOs;
@@ -113,11 +114,19 @@ namespace WebApplication1.Controllers
                 return NotFound(new { message = "Staff not found" });
 
             // Check old password
-            if (user.Password != dto.OldPassword)
-                return BadRequest(new { message = "Old password is incorrect" });
+            var hasher = new PasswordHasher<UserS>();
+
+            var result = hasher.VerifyHashedPassword(
+                user,
+                user.Password,
+                dto.OldPassword
+            );
 
             // Update password
-            user.Password = dto.NewPassword;
+            user.Password = hasher.HashPassword(user, dto.NewPassword); ;
+
+            _context.SaveChanges();
+
 
             _context.SaveChanges();
 
@@ -176,5 +185,8 @@ namespace WebApplication1.Controllers
 
             return Ok(result);
         }
+
+
+
     }
 }
