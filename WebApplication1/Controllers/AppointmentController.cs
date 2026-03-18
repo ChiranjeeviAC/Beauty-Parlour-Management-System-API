@@ -141,7 +141,7 @@ namespace WebApplication1.Controllers
         }
 
         // 🔹 UPDATE
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult UpdateAppointment(int id, AppointmentUpdateDto dto)
         {
             var appointment = _context.Appointments.Find(id);
@@ -177,7 +177,7 @@ namespace WebApplication1.Controllers
 
         // To change appointment Time Slot
 
-        [HttpPut("{id}")]
+        [HttpPatch("{id}")]
         public IActionResult UpdateAppointmentTimeslot(int id, string TimeSlot)
         {
             var appointment = _context.Appointments.Find(id);
