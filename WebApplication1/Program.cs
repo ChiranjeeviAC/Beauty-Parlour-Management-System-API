@@ -2,6 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApplication1.Data;
+using WebApplication1.Interfaces;
+using WebApplication1.Repositories;
+using WebApplication1.Services;
 
 
 namespace WebApplication1
@@ -25,6 +28,11 @@ namespace WebApplication1
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddScoped<ICustomerService, CustomerService>();
+
 
             var app = builder.Build();
 

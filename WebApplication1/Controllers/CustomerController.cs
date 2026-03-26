@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTOs;
 using WebApplication1.DTOs.Customer;
-using WebApplication1.Model;
+using WebApplication1.Interfaces;
 
 namespace WebApplication1.Controllers
 {
@@ -13,85 +9,39 @@ namespace WebApplication1.Controllers
     [ApiController]
     public class CustomerController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICustomerService _service;
 
-        public CustomerController(ApplicationDbContext context)
+        public CustomerController(ICustomerService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/customer
         [HttpGet]
         public IActionResult GetAllCustomers()
         {
-            var customers = _context.Customers.ToList();
-
-            var result = customers.Select(c => new CustomerResponseDto
-            {
-                CustomerId = c.CustomerId,
-                Name = c.Name,
-                Phone = c.Phone,
-                Email = c.Email,
-                Address = c.Address,
-                Gender = c.Gender
-            }).ToList();
-
-            return Ok(result);
+            return Ok(_service.GetAll());
         }
 
-        // GET: api/customer/5
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
-            var customer = _context.Customers.Find(id);
-
-            if (customer == null)
+            var result = _service.GetById(id);
+            if (result == null)
                 return NotFound(new { message = "Customer not found" });
-
-            var result = new CustomerResponseDto
-            {
-                CustomerId = customer.CustomerId,
-                Name = customer.Name,
-                Phone = customer.Phone,
-                Email = customer.Email,
-                Address = customer.Address,
-                Gender = customer.Gender
-            };
 
             return Ok(result);
         }
 
-        
-
-        //  PUT: api/customer/5
         [HttpPut("{id}")]
         public IActionResult UpdateCustomer(int id, CustomerUpdateDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var customer = _context.Customers.Find(id);
+            var result = _service.Update(id, dto);
 
-            if (customer == null)
+            if (result == null)
                 return NotFound(new { message = "Customer not found" });
-
-            customer.Name = dto.Name;
-            customer.Phone = dto.Phone;
-            customer.Email = dto.Email;
-            customer.Address = dto.Address;
-            customer.Gender = dto.Gender;
-
-            _context.SaveChanges();
-
-            var result = new CustomerResponseDto
-            {
-                CustomerId = customer.CustomerId,
-                Name = customer.Name,
-                Phone = customer.Phone,
-                Email = customer.Email,
-                Address = customer.Address,
-                Gender = customer.Gender
-            };
 
             return Ok(new
             {
@@ -100,6 +50,16 @@ namespace WebApplication1.Controllers
             });
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            var success = _service.Delete(id);
+
+            if (!success)
+                return NotFound(new { message = "Customer not found" });
+
+            return Ok(new { message = "Customer deleted successfully" });
+        }
 
         [HttpPut("{id}/change-password")]
         public IActionResult ChangePassword(int id, ChangePasswordDto dto)
@@ -107,82 +67,21 @@ namespace WebApplication1.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Find login record using CustomerId
-            var user = _context.UserCs
-                .FirstOrDefault(u => u.CustomerId == id);
+            var success = _service.ChangePassword(id, dto);
 
-            if (user == null)
-                return NotFound(new { message = "Customer not found" });
+            if (!success)
+                return BadRequest(new { message = "Invalid old password or user not found" });
 
-            // Check old password
-            var hasher = new PasswordHasher<UserC>();
-
-            var result = hasher.VerifyHashedPassword(
-                user,
-                user.Password,
-                dto.OldPassword
-            );
-
-            // Update password
-            user.Password = hasher.HashPassword(user, dto.NewPassword); ;
-
-            _context.SaveChanges();
-
-            return Ok(new
-            {
-                message = "Customer password updated successfully"
-            });
+            return Ok(new { message = "Customer password updated successfully" });
         }
-
-        //  DELETE: api/customer/5
-        [HttpDelete("{id}")]
-        public IActionResult DeleteCustomer(int id)
-        {
-            var customer = _context.Customers.Find(id);
-
-            if (customer == null)
-                return NotFound(new { message = "Customer not found" });
-
-            _context.Customers.Remove(customer);
-            _context.SaveChanges();
-
-            return Ok(new
-            {
-                message = "Customer deleted successfully",
-                data = new CustomerResponseDto
-                {
-                    CustomerId = customer.CustomerId,
-                    Name = customer.Name,
-                    Phone = customer.Phone,
-                    Email = customer.Email,
-                    Address = customer.Address,
-                    Gender = customer.Gender
-                }
-
-
-            });
-        }
-
 
         [HttpGet("{id}/appointments")]
         public IActionResult GetCustomerAppointments(int id)
         {
-            var customer = _context.Customers
-                .Include(c => c.Appointments)
-                .ThenInclude(a => a.Service)
-                .FirstOrDefault(c => c.CustomerId == id);
+            var result = _service.GetCustomerAppointments(id);
 
-            if (customer == null)
+            if (result == null)
                 return NotFound(new { message = "Customer not found" });
-
-            var result = customer.Appointments.Select(a => new
-            {
-                a.AppointmentId,
-                a.AppointmentDate,
-                a.TimeSlot,
-                ServiceName = a.Service.ServiceName,
-                a.Status
-            }).ToList();
 
             return Ok(result);
         }
