@@ -5,6 +5,9 @@ using WebApplication1.Data;
 using WebApplication1.Interfaces;
 using WebApplication1.Repositories;
 using WebApplication1.Services;
+using WebApplication1.Interfaces;
+using WebApplication1.Repositories;
+using WebApplication1.Services;
 
 
 namespace WebApplication1
@@ -32,6 +35,8 @@ namespace WebApplication1
 
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+            builder.Services.AddScoped<IAuthCustomerRepository, AuthCustomerRepository>();
+            builder.Services.AddScoped<IAuthCustomerService, AuthCustomerService>();
 
 
             var app = builder.Build();
