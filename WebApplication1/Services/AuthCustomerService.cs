@@ -3,6 +3,10 @@ using WebApplication1.DTOs;
 using WebApplication1.DTOs.Customer;
 using WebApplication1.Interfaces;
 using WebApplication1.Model;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace WebApplication1.Services
 {
@@ -84,12 +88,44 @@ namespace WebApplication1.Services
                 return new { success = false, message = "Invalid email or password" };
             }
 
+            // ✅ GENERATE TOKEN HERE (correct place)
+            var token = GenerateJwtToken(customer);
+
             return new
             {
                 success = true,
                 message = "Customer login successful",
+                token = token,
                 customerId = customer.CustomerId
             };
+
+
+        }
+
+
+        public string GenerateJwtToken(Customer customer)
+        {
+            var claims = new[]
+            {
+        
+        new Claim(ClaimTypes.Email, customer.Email)
+    };
+
+            var key = new SymmetricSecurityKey(
+               Encoding.UTF8.GetBytes("THIS_IS_MY_SUPER_SECRET_KEY_12345_ABCDE")
+            );
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: "BeautyParlourAPI",
+                audience: "BeautyParlourUsers",
+                claims: claims,
+                expires: DateTime.Now.AddHours(2),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

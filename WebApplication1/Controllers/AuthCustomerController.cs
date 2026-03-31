@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WebApplication1.DTOs;
 using WebApplication1.DTOs.Customer;
 using WebApplication1.Interfaces;
+using WebApplication1.Model;
 
 namespace WebApplication1.Controllers
 {
+    
     [Route("api/auth-customer")]
     [ApiController]
     public class AuthCustomerController : ControllerBase
@@ -26,6 +29,8 @@ namespace WebApplication1.Controllers
 
             return Ok(result);
         }
+        
+
 
         [HttpPost("login")]
         public IActionResult Login(LoginDto dto)
@@ -34,8 +39,11 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
 
             var result = _service.Login(dto);
+            
 
-            return Ok(result);
+            return Ok( result);
+
+           
         }
     }
 }
