@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using WebApplication1.DTOs;
 using WebApplication1.DTOs.Customer;
 using WebApplication1.Interfaces;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
@@ -25,9 +28,15 @@ namespace WebApplication1.Controllers
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (id != userId)
+                return Unauthorized("You can access only your data");
+
             var result = _service.GetById(id);
+
             if (result == null)
-                return NotFound(new { message = "Customer not found" });
+                return NotFound();
 
             return Ok(result);
         }

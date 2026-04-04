@@ -78,10 +78,10 @@ namespace WebApplication1
 
             app.UseHttpsRedirection();
             
-            app.MapControllers();
+            
 
             app.UseAuthentication();
-           
+            app.MapControllers();
 
             app.Run();
         }
