@@ -9,7 +9,7 @@ using WebApplication1.Model.Enums;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
