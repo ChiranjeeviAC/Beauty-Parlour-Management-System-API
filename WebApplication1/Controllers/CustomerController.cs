@@ -7,7 +7,7 @@ using WebApplication1.Interfaces;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CustomerController : ControllerBase
