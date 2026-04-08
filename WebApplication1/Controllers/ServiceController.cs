@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlTypes;
 using WebApplication1.Data;
 using WebApplication1.DTOs.Service;
 using WebApplication1.Model;
@@ -150,6 +151,31 @@ namespace WebApplication1.Controllers
             {
                 message = "Service updated successfully",
                 data = result
+            });
+        }
+
+        [HttpPut("UpdateServicePrice{id}")]
+        public IActionResult UpdateServicePrice(int id, double Price)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var service = _context.Services.Find(id);
+
+            if (service == null)
+                return NotFound(new { message = "Service not found" });
+
+            service.Price = Price;
+
+
+            _context.SaveChanges();
+
+            
+
+            return Ok(new
+            {
+                message = "Service updated successfully",
+                data = service
             });
         }
 
