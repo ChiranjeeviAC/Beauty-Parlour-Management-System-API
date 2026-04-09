@@ -4,6 +4,7 @@ using System.Data.SqlTypes;
 using WebApplication1.Data;
 using WebApplication1.DTOs.Service;
 using WebApplication1.Model;
+using WebApplication1.Model.Enums;
 
 namespace WebApplication1.Controllers
 {
@@ -148,6 +149,30 @@ namespace WebApplication1.Controllers
             });
         }
 
+        [HttpPut("UpdateServiceCategory{id}")]
+        public IActionResult UpdateServiceCategory(int id, ServiceCategory Category)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var service = _context.Services.Find(id);
+
+            if (service == null)
+                return NotFound(new { message = "Service not found" });
+
+            service.Category = Category;
+
+
+            _context.SaveChanges();
+
+
+
+            return Ok(new
+            {
+                message = "Service updated successfully",
+                data = service
+            });
+        }
         [HttpPut("UpdateServiceName{id}")]
         public IActionResult UpdateServiceName(int id, string ServiceName )
         {
