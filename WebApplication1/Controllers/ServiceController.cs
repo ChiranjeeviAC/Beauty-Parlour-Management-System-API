@@ -37,6 +37,21 @@ namespace WebApplication1.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetNoOfServices")]
+        public IActionResult GetNoOfServices()
+        {
+            var services = _context.Services.ToList();
+            var ans = services.Count();
+           
+
+            return Ok(new
+            {
+                Status = true,
+                Message = "Fetched Services count",
+                Data = ans
+            });
+        }
+
         //  GET: api/service/5
         [HttpGet("{id}")]
         public IActionResult GetServiceById(int id)
