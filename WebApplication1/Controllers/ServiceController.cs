@@ -123,6 +123,30 @@ namespace WebApplication1.Controllers
             });
         }
 
+        [HttpPut("UpdateServiceDuration{id}")]
+        public IActionResult UpdateServiceDuration(int id, int Duration)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var service = _context.Services.Find(id);
+
+            if (service == null)
+                return NotFound(new { message = "Service not found" });
+
+            service.Duration = Duration;
+
+
+            _context.SaveChanges();
+
+
+
+            return Ok(new
+            {
+                message = "Service updated successfully",
+                data = service
+            });
+        }
 
         [HttpPut("UpdateServiceName{id}")]
         public IActionResult UpdateServiceName(int id, string ServiceName )
