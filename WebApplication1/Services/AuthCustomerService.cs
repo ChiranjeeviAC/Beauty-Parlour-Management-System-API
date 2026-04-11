@@ -19,6 +19,16 @@ namespace WebApplication1.Services
             _repository = repository;
         }
 
+
+        private readonly IJwtService _jwtService;
+
+        public AuthCustomerService(IAuthCustomerRepository repository, IJwtService jwtService)
+        {
+            _repository = repository;
+            _jwtService = jwtService;
+        }
+
+
         public object Register(CustomerRegisterDto dto)
         {
             // Check email
@@ -89,7 +99,10 @@ namespace WebApplication1.Services
             }
 
             // ✅ GENERATE TOKEN HERE (correct place)
-            var token = GenerateJwtToken(customer);
+            var token = _jwtService.GenerateToken(customer.CustomerId,
+                                customer.Email,
+                                "Customer"
+                                );
 
             return new
             {
@@ -108,7 +121,8 @@ namespace WebApplication1.Services
             var claims = new[]
             {
         
-        new Claim(ClaimTypes.Email, customer.Email)
+        new Claim(ClaimTypes.Email, customer.Email),
+        new Claim(ClaimTypes.Role, customer.Name )
     };
 
             var key = new SymmetricSecurityKey(

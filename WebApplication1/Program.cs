@@ -41,6 +41,9 @@ namespace WebApplication1
             builder.Services.AddScoped<IAuthCustomerRepository, AuthCustomerRepository>();
             builder.Services.AddScoped<IAuthCustomerService, AuthCustomerService>();
 
+
+            builder.Services.AddScoped<IJwtService, JwtService>();
+
             var jwtSettings = builder.Configuration.GetSection("Jwt");
 
             builder.Services.AddAuthentication(options =>
