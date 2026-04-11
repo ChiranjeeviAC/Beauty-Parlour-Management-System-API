@@ -19,12 +19,15 @@ namespace WebApplication1.Controllers
             _service = service;
         }
 
+
+        [Authorize(Roles = "Receptionist,Beautician")]
         [HttpGet]
         public IActionResult GetAllCustomers()
         {
             return Ok(_service.GetAll());
         }
 
+        [Authorize(Roles = "Customer")]
         [HttpGet("{id}")]
         public IActionResult GetCustomerById(int id)
         {
@@ -83,7 +86,7 @@ namespace WebApplication1.Controllers
 
             return Ok(new { message = "Customer password updated successfully" });
         }
-
+        [Authorize(Roles = "Receptionist")]
         [HttpGet("{id}/appointments")]
         public IActionResult GetCustomerAppointments(int id)
         {
