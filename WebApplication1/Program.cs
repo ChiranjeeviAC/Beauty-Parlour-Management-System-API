@@ -40,6 +40,8 @@ namespace WebApplication1
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IAuthCustomerRepository, AuthCustomerRepository>();
             builder.Services.AddScoped<IAuthCustomerService, AuthCustomerService>();
+            builder.Services.AddScoped<IAuthStaffRepository, AuthStaffRepository>();
+            builder.Services.AddScoped<IAuthStaffService, AuthStaffService>();
 
 
             builder.Services.AddScoped<IJwtService, JwtService>();
@@ -80,11 +82,11 @@ namespace WebApplication1
             }
 
             app.UseHttpsRedirection();
-            
-            
 
-            app.UseAuthentication();
-            app.MapControllers();
+            app.UseAuthentication();   // FIRST
+            app.UseAuthorization();    // SECOND 🔥
+
+            app.MapControllers();      // LAST
 
             app.Run();
         }
